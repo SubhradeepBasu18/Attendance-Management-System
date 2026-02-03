@@ -1,0 +1,27 @@
+﻿CREATE TABLE student(
+	id INT PRIMARY KEY IDENTITY(1,1),
+	name VARCHAR(100) NOT NULL,
+	roll_no INT NOT NULL,
+	section VARCHAR(25) NOT NULL,
+	class VARCHAR(50) NOT NULL
+);
+
+
+CREATE TABLE hashtable(
+	id INT PRIMARY KEY IDENTITY(1,1),
+	studentID INT,
+	hash VARCHAR(300) NOT NULL,
+
+	CONSTRAINT FK_student_hashtable FOREIGN KEY(studentID)
+	REFERENCES student(id) 
+);
+
+CREATE TABLE attendance(
+	id INT PRIMARY KEY IDENTITY(1,1),
+	studentID INT,
+	date DATE,
+	in_time TIME,
+	status VARCHAR(100)
+	CONSTRAINT FK_student_attendance FOREIGN KEY (studentID) 
+	REFERENCES student(id)
+);

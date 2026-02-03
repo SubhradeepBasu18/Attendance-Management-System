@@ -1,0 +1,26 @@
+﻿create or alter proc sp_InsertOrEditIntoStudent
+	@id int = 0,
+	@name varchar(100),
+	@roll_no int,
+	@section varchar(25),
+	@class varchar(50)
+as
+begin
+	if @id = 0
+	begin
+		insert into dbo.student (name,roll_no,section,class)
+		values(@name,@roll_no,@section,@class)
+
+		SELECT CAST(SCOPE_IDENTITY() AS INT) AS StudentID;
+	end
+	else
+	begin
+		update dbo.student
+		set name = @name,
+			roll_no = @roll_no ,
+			section = @section,
+			class = @class
+		where id = @id;
+	end
+
+end;

@@ -1,0 +1,10 @@
+﻿create or alter proc sp_InsertHashAndStudentID
+	@studentID int,
+	@hash varchar(300)
+as
+begin
+	insert into dbo.hashtable(studentID, hash)
+	values (@studentID, @hash)
+end;
+
+exec sp_InsertHashAndStudentID @studentID = 1, @hash = 'xyz123';

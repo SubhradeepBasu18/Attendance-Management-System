@@ -1,0 +1,14 @@
+﻿	create or alter	proc sp_insertAttendance
+		@studentID INT,
+		@status VARCHAR(100)
+
+	AS
+	BEGIN
+		insert into attendance(studentID,date,in_time,status)
+		values(@studentID,CAST(GETDATE() AS DATE), CAST(SYSDATETIME() AS TIME),@status)
+	end
+	go
+
+exec sp_insertAttendance
+	@studentID=2,
+	@status='ABSENT'
