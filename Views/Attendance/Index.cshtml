@@ -7,6 +7,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 
+@Html.AntiForgeryToken()
+
 <div class="animated-background">
     <ul class="circles">
         <li></li>
@@ -71,6 +73,33 @@
     </div>
 </div>
 
+<!-- Attendance Result Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-modal">
+            <div class="modal-header border-0 bg-transparent">
+                <h5 class="modal-title text-white fw-bold" id="attendanceModalLabel">
+                    <i class="fa-solid fa-clipboard-check me-2"></i> Attendance Marked
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center text-white">
+                <div class="mb-3">
+                    <i class="fa-solid fa-check-circle fa-3x text-success"></i>
+                </div>
+                <p class="fw-semibold mb-1" id="attendanceStatus"></p>
+                <p class="text-white-50 small mb-3" id="attendanceTime"></p>
+                <p class="text-white-50 small" id="attendanceDate"></p>
+            </div>
+            <div class="modal-footer border-0 bg-transparent">
+                <button type="button" class="btn btn-sm btn-gradient text-white fw-bold" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-times me-1"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     /* --- 1. Base & Fonts --- */
     body, html {
@@ -93,9 +122,17 @@
 
     /* Color Shift Animation */
     @@keyframes gradientBG {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
     }
 
     /* --- 3. Floating Particles (The Circles/Squares) --- */
@@ -111,30 +148,94 @@
         z-index: 1; /* Behind the card */
     }
 
-    .circles li {
-        position: absolute;
-        display: block;
-        list-style: none;
-        width: 20px;
-        height: 20px;
-        background: rgba(255, 255, 255, 0.2);
-        animation: floatUp 25s linear infinite;
-        bottom: -150px;
-        border-radius: 4px; /* Slight rounded corners (looks like tech chips) */
-        box-shadow: 0 0 10px rgba(255,255,255,0.3);
-    }
+        .circles li {
+            position: absolute;
+            display: block;
+            list-style: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            animation: floatUp 25s linear infinite;
+            bottom: -150px;
+            border-radius: 4px; /* Slight rounded corners (looks like tech chips) */
+            box-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
 
-    /* Randomize the particles */
-    .circles li:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
-    .circles li:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
-    .circles li:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
-    .circles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
-    .circles li:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
-    .circles li:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
-    .circles li:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
-    .circles li:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
-    .circles li:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; }
-    .circles li:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
+            /* Randomize the particles */
+            .circles li:nth-child(1) {
+                left: 25%;
+                width: 80px;
+                height: 80px;
+                animation-delay: 0s;
+            }
+
+            .circles li:nth-child(2) {
+                left: 10%;
+                width: 20px;
+                height: 20px;
+                animation-delay: 2s;
+                animation-duration: 12s;
+            }
+
+            .circles li:nth-child(3) {
+                left: 70%;
+                width: 20px;
+                height: 20px;
+                animation-delay: 4s;
+            }
+
+            .circles li:nth-child(4) {
+                left: 40%;
+                width: 60px;
+                height: 60px;
+                animation-delay: 0s;
+                animation-duration: 18s;
+            }
+
+            .circles li:nth-child(5) {
+                left: 65%;
+                width: 20px;
+                height: 20px;
+                animation-delay: 0s;
+            }
+
+            .circles li:nth-child(6) {
+                left: 75%;
+                width: 110px;
+                height: 110px;
+                animation-delay: 3s;
+            }
+
+            .circles li:nth-child(7) {
+                left: 35%;
+                width: 150px;
+                height: 150px;
+                animation-delay: 7s;
+            }
+
+            .circles li:nth-child(8) {
+                left: 50%;
+                width: 25px;
+                height: 25px;
+                animation-delay: 15s;
+                animation-duration: 45s;
+            }
+
+            .circles li:nth-child(9) {
+                left: 20%;
+                width: 15px;
+                height: 15px;
+                animation-delay: 2s;
+                animation-duration: 35s;
+            }
+
+            .circles li:nth-child(10) {
+                left: 85%;
+                width: 150px;
+                height: 150px;
+                animation-delay: 0s;
+                animation-duration: 11s;
+            }
 
     /* The Upward Float Animation */
     @@keyframes floatUp {
@@ -143,6 +244,7 @@
             opacity: 1;
             border-radius: 0;
         }
+
         100% {
             transform: translateY(-1000px) rotate(720deg);
             opacity: 0;
@@ -163,15 +265,45 @@
         box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
     }
 
-    /* --- 5. UI Elements --- */
-    .icon-wrapper { color: #00d2ff; text-shadow: 0 0 15px rgba(0, 210, 255, 0.6); }
-    .ls-1 { letter-spacing: 1px; }
+    /* --- 5. Glass Modal Styling --- */
+    .glass-modal {
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+    }
+
+    /* --- 6. UI Elements --- */
+    .icon-wrapper {
+        color: #00d2ff;
+        text-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
+    }
+
+    .ls-1 {
+        letter-spacing: 1px;
+    }
 
     /* Inputs */
-    .custom-input { border: 1px solid rgba(255,255,255,0.3); height: 50px; box-shadow: none !important; }
-    .custom-input:focus { background-color: rgba(255,255,255,0.1); border-color: #00d2ff; color: white; }
-    .input-group-text { border: 1px solid rgba(255,255,255,0.3); }
-    .form-control::placeholder { color: rgba(255,255,255,0.4); }
+    .custom-input {
+        border: 1px solid rgba(255,255,255,0.3);
+        height: 50px;
+        box-shadow: none !important;
+    }
+
+        .custom-input:focus {
+            background-color: rgba(255,255,255,0.1);
+            border-color: #00d2ff;
+            color: white;
+        }
+
+    .input-group-text {
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .form-control::placeholder {
+        color: rgba(255,255,255,0.4);
+    }
 
     /* Buttons */
     .btn-gradient {
@@ -179,15 +311,20 @@
         border: none;
         transition: transform 0.2s, box-shadow 0.2s;
     }
-    .btn-gradient:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 25px rgba(0, 210, 255, 0.6);
-        color: white;
-    }
-    .btn-gradient:active { transform: scale(0.98); }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(0, 210, 255, 0.6);
+            color: white;
+        }
+
+        .btn-gradient:active {
+            transform: scale(0.98);
+        }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -220,6 +357,8 @@
             var regNo = $('#regNo').val().trim();
             var resultDiv = $('#result');
 
+            console.log("RegNo: ", regNo)
+
             resultDiv.hide().removeClass('text-danger text-success');
 
             if (regNo === '') {
@@ -234,15 +373,28 @@
             btn.prop('disabled', true).html('<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...');
 
             $.ajax({
-                url: '@Url.Action("MarkAttendance", "Attendance")',
+                url: '@Url.Action("Mark", "Attendance")',
                 type: 'POST',
-                data: { registrationNo: regNo },
+                data: {
+                    id: regNo,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
                 success: function (response) {
-                    resultDiv.removeClass('text-danger').addClass('text-success')
-                             .html('<i class="fa-solid fa-check"></i> ' + response).fadeIn();
+
+                    console.log("Response: ", response);
+                    // Populate modal with attendance data
+                    $('#attendanceStatus').text('Status: ' + (response.status || 'Present'));
+                    $('#attendanceTime').text('Time: ' + (response.in_time || 'N/A'));
+                    $('#attendanceDate').text('Date: ' + (response.date ? new Date(response.date).toLocaleDateString() : 'N/A'));
+
+                    // Show modal
+                    var attendanceModal = new bootstrap.Modal(document.getElementById('attendanceModal'));
+                    attendanceModal.show();
+
                     $('#regNo').val('');
                 },
-                error: function () {
+                error: function (er) {
+                    console.log(er)
                     resultDiv.removeClass('text-success').addClass('text-danger')
                              .html('<i class="fa-solid fa-triangle-exclamation"></i> Failed').fadeIn();
                 },
@@ -252,8 +404,8 @@
             });
         });
 
-        $('#regNo').keypress(function(e){
-            if(e.which == 13) $('#btnMark').click();
-        });
+        //$('#regNo').keypress(function(e){
+        //    if(e.which == 13) $('#btnMark').click();
+        //});
     });
 </script>
