@@ -1,0 +1,50 @@
+﻿@model Attendance_Management_System.Models.AttendanceModel
+
+@{
+    ViewBag.Title = "Mark";
+}
+
+<h2>Mark</h2>
+
+<div>
+    <h4>AttendanceModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.studentID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.studentID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.in_time)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.in_time)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.status)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
