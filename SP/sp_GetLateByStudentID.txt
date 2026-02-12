@@ -1,14 +1,20 @@
 ﻿USE [Student-Attendance-System]
 GO
-/****** Object:  StoredProcedure [dbo].[sp_GetLateByStudentID]    Script Date: 2/9/2026 12:01:27 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetLateByStudentID]    Script Date: 2/12/2026 10:17:04 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 ALTER PROC [dbo].[sp_GetLateByStudentID]
-@id INT
+    @id INT  -- Hash ID
 AS
-    SET NOCOUNT ON;
 BEGIN
- SELECT COUNT(*) FROM attendance WHERE id = @id AND status LIKE 'LATE';
+    SET NOCOUNT ON;
+
+    SELECT COUNT(*) AS LateCount
+    FROM attendance at
+    INNER JOIN hashtable ht 
+        ON at.studentID = ht.studentID
+    WHERE ht.id = @id
+      AND at.status = 'LATE';
 END

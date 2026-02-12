@@ -1,11 +1,11 @@
 ﻿USE [Student-Attendance-System]
 GO
-/****** Object:  StoredProcedure [dbo].[sp_InsertHashAndStudentID]    Script Date: 2/5/2026 3:08:14 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_InsertHashAndStudentID]    Script Date: 2/12/2026 10:18:36 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE OR ALTER PROC [dbo].[sp_InsertHashAndStudentID]
+ALTER   PROC [dbo].[sp_InsertHashAndStudentID]
     @studentID INT,
     @hash VARCHAR(300)
 AS

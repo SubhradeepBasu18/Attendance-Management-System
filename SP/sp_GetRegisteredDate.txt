@@ -1,4 +1,11 @@
-﻿CREATE OR ALTER PROCEDURE sp_GetRegisteredDate
+﻿USE [Student-Attendance-System]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_GetRegisteredDate]    Script Date: 2/12/2026 10:17:23 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER   PROCEDURE [dbo].[sp_GetRegisteredDate]
     @id INT
 AS
 BEGIN
@@ -7,4 +14,3 @@ BEGIN
     INNER JOIN student s ON s.id = h.studentId
     WHERE h.id = @id;
 END
-GO

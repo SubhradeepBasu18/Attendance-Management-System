@@ -1,43 +1,63 @@
-﻿ALTER PROC [dbo].[sp_insertAttendance]
-    @studentID INT,
-    @status VARCHAR(100)
+﻿USE [Student-Attendance-System]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_insertAttendance]    Script Date: 2/12/2026 10:17:55 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC [dbo].[sp_insertAttendance]
+    @id INT
 AS
 BEGIN
     SET NOCOUNT ON;
  
-    -- Student must exist
-    IF NOT EXISTS (
-        SELECT 1
-        FROM dbo.student
-        WHERE id = @studentID
-    )
+    DECLARE 
+        @studentID INT,
+        @status VARCHAR(10),
+        @today DATE = CAST(GETDATE() AS DATE),
+        @now TIME = CAST(SYSDATETIME() AS TIME),
+        @threshold TIME = '09:15:00',
+		@attendanceID INT;
+ 
+    -- Validate registration number (hashID)
+    SELECT @studentID = studentID
+    FROM dbo.hashtable
+    WHERE id = @id;
+ 
+    IF @studentID IS NULL
     BEGIN
-        THROW 50001, 'No such student is there in our records!', 1;
+        THROW 50001, 'Invalid registration number', 1;
     END
  
-    -- No duplicate attendance
+    -- Prevent duplicate attendance
     IF EXISTS (
         SELECT 1
         FROM dbo.attendance
         WHERE studentID = @studentID
-          AND [date] = CAST(GETDATE() AS DATE)
+          AND [date] = @today
     )
     BEGIN
-        THROW 50002, 'The student is already marked for today', 1;
+        THROW 50002, 'Attendance already marked for today', 1;
     END
  
-    -- Validate status
-    IF UPPER(@status) NOT IN ('PRESENT', 'LATE')
-    BEGIN
-        THROW 50003, 'Attendance status must be either PRESENT or LATE', 1;
-    END
+    --  Determine attendance status
+    SET @status =
+        CASE
+            WHEN @now <= @threshold THEN 'PRESENT'
+            ELSE 'LATE'
+        END;
  
-    -- Insert attendance
+    --  Insert attendance
     INSERT INTO dbo.attendance (studentID, [date], in_time, status)
-    VALUES (
-        @studentID,
-        CAST(GETDATE() AS DATE),
-        CAST(SYSDATETIME() AS TIME),
-        UPPER(@status)
-    );
+    VALUES (@studentID, @today, @now, @status);
+ 
+	SET @attendanceID = CAST(SCOPE_IDENTITY() AS INT);
+ 
+    -- return
+    SELECT
+		@attendanceID AS id,
+        @studentID AS studentID,     
+        @today AS date,
+        @now AS in_time,
+		@status AS status;
 END;
